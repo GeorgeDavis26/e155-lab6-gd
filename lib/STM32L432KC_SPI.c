@@ -31,7 +31,15 @@ void initSPI(int br, int cpol, int cpha) {
     pinMode(GPIO_CIPO, GPIO_ALT);  // Controller in Peripheral Out (CIPO)
     pinMode(GPIO_COPI, GPIO_ALT);  // Controller out Peripheral in (COPI)
     pinMode(GPIO_SCK, GPIO_ALT);   // Serial Clock
-    pinMode(GPIO_CE, GPIO_OUTPUT); // Chip Select
+    pinMode(GPIO_CS, GPIO_OUTPUT); // Chip Select
+
+    // AF05 for SPI alternate functions
+    //PA12: MOSI
+    GPIOA->AFR[0] |= _VAL2FLD(GPIO_AFRH_AFSEL12, 5);
+    //PA11: MISO
+    GPIOB->AFR[0] |= _VAL2FLD(GPIO_AFRH_AFSEL11, 5);
+    //PA5: SCK
+    GPIOB->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL5, 5);
 
     // Configure the serial clock baud rate using the BR[2:0] bits
     SPI1->CR1 |= _VAL2FLD(SPI_CR1_BR, br); // Set baud rate divider
@@ -45,18 +53,10 @@ void initSPI(int br, int cpol, int cpha) {
     SPI1->CR1 |= _VAL2FLD(SPI_CR1_CPOL, cpol);
 
     // Configure the LSBFIRST bit to define the frame format
-    SPI1->CR1 &= ~SPI_CR1_LSBFIRST
+    SPI1->CR1 &= ~SPI_CR1_LSBFIRST;
 
     // Select simplex or half-duplex mode by configuring RXONLY or BIDIMODE and BIDIOE 
     // By default set to full-duplex, no action required
-
-    // Set output speed type to high for SCK
-    GPIOB->OSPEEDR |= (GPIO_OSPEEDR_OSPEED3);
-
-    // Set to AF05 for SPI alternate functions
-    GPIOB->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL3, 5);
-    GPIOB->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL4, 5);
-    GPIOB->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL5, 5);
 
     // Configure SSM and SSI 
     // Peripheral Select (NSS - Slave Select) Pin Management

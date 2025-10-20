@@ -50,6 +50,10 @@ int updateLEDStatus(char request[])
 // Solution Functions
 /////////////////////////////////////////////////////////////////
 
+//GLOBAL VARIABLE
+
+int res = 0;
+
 int main(void) {
   configureFlash();
   configureClock();
@@ -73,7 +77,8 @@ int main(void) {
  *          1: data changed on leading edge of clk and captured on next edge)
  * Refer to the datasheet for more low-level details. */ 
 
-  initSPI(BR, CPOL, CPHA);
+  initSPI(1, 0, 0);
+  configDS(res);
 
   while(1) {
     /* Wait for ESP8266 to send a request.
@@ -93,7 +98,7 @@ int main(void) {
     }
 
     // TODO: Add SPI code here for reading temperature
-    readTemp(void);
+    int t = readTemp(res);
 
     // Update string with current LED state
   

@@ -1,7 +1,7 @@
 // STM32L432KC_SPI.h
-// TODO: <YOUR NAME>
-// TODO: <YOUR EMAIL>
-// TODO: <DATE>
+// George Davis
+// gdavis@hmc.edu
+// 10/22/25
 // TODO: <SHORT DESCRIPTION OF WHAT THIS FILE DOES>
 
 #ifndef STM32L4_SPI_H

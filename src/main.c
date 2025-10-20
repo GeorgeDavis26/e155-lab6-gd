@@ -65,7 +65,15 @@ int main(void) {
   
   USART_TypeDef * USART = initUSART(USART1_ID, 125000);
 
-  // TODO: Add SPI initialization code
+
+/* Enables the SPI peripheral and intializes its clock speed (baud rate), polarity, and phase.
+ *    -- br: (0b000 - 0b111). The SPI clk will be the master clock / 2^(BR+1).
+ *    -- cpol: clock polarity (0: inactive state is logical 0, 1: inactive state is logical 1).
+ *    -- cpha: clock phase (0: data captured on leading edge of clk and changed on next edge, 
+ *          1: data changed on leading edge of clk and captured on next edge)
+ * Refer to the datasheet for more low-level details. */ 
+
+  initSPI(BR, CPOL, CPHA);
 
   while(1) {
     /* Wait for ESP8266 to send a request.
@@ -85,7 +93,8 @@ int main(void) {
     }
 
     // TODO: Add SPI code here for reading temperature
-  
+    readTemp(void);
+
     // Update string with current LED state
   
     int led_status = updateLEDStatus(request);
@@ -111,3 +120,4 @@ int main(void) {
     sendString(USART, webpageEnd);
   }
 }
+

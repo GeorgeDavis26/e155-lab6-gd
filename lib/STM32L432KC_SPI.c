@@ -35,11 +35,11 @@ void initSPI(int br, int cpol, int cpha) {
 
     // AF05 for SPI alternate functions
     //PA12: MOSI
-    GPIOA->AFR[0] |= _VAL2FLD(GPIO_AFRH_AFSEL12, 5);
+    GPIOA->AFR[1] |= _VAL2FLD(GPIO_AFRH_AFSEL12, 5);
     //PA11: MISO
-    GPIOB->AFR[0] |= _VAL2FLD(GPIO_AFRH_AFSEL11, 5);
+    GPIOA->AFR[1] |= _VAL2FLD(GPIO_AFRH_AFSEL11, 5);
     //PA5: SCK
-    GPIOB->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL5, 5);
+    GPIOA->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL5, 5);
 
     // Configure the serial clock baud rate using the BR[2:0] bits
     SPI1->CR1 |= _VAL2FLD(SPI_CR1_BR, br); // Set baud rate divider

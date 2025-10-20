@@ -52,7 +52,7 @@ int updateLEDStatus(char request[])
 
 //GLOBAL VARIABLE
 
-int res = 0;
+int res = 8;
 
 int main(void) {
   configureFlash();
@@ -77,7 +77,7 @@ int main(void) {
  *          1: data changed on leading edge of clk and captured on next edge)
  * Refer to the datasheet for more low-level details. */ 
 
-  initSPI(1, 0, 0);
+  initSPI(8, 1, 0);
   configDS(res);
 
   while(1) {

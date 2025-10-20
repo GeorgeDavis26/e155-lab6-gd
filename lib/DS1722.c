@@ -35,9 +35,7 @@ void readTemp(void){
     int16_t MSb = spiSendRecieve(DUMMY); 
     spiSendRecieve(0x02); 
     int16_t LSb = spiSendRecieve(DUMMY);
-
     int16_t temp_bits = MSb << 8 | LSb;
-
     // Convert MSb and LSb to Decimal value
     if (res == 12)      {temp = TWELVEBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));};
     else if (res == 11) {temp = ELEVENBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));};

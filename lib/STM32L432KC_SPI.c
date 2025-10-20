@@ -5,9 +5,11 @@
 // TODO: <SHORT DESCRIPTION OF WHAT THIS FILE DOES>
 
 #include "STM32L432KC.h"
+
 #include "STM32L432KC_SPI.h"
 #include "STM32L432KC_GPIO.h"
 #include "STM32L432KC_RCC.h"
+#include "main.h"
 
 /* Enables the SPI peripheral and intializes its clock speed (baud rate), polarity, and phase.
  *    -- br: (0b000 - 0b111). The SPI clk will be the master clock / 2^(BR+1).
@@ -23,13 +25,13 @@ void initSPI(int br, int cpol, int cpha) {
     RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
 
     // Enable SPI1 clk
-    RCC->APB2ENR |= RCC_APB2ENR_SPI1EN
+    RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
 
-    // Initially assigning SPI pins
+    // Initially assigning SPI pins GPIO_COPI
     pinMode(GPIO_CIPO, GPIO_ALT);  // Controller in Peripheral Out (CIPO)
     pinMode(GPIO_COPI, GPIO_ALT);  // Controller out Peripheral in (COPI)
     pinMode(GPIO_SCK, GPIO_ALT);   // Serial Clock
-    pinMode(GPIO_CS, GPIO_OUTPUT); // Chip Select
+    pinMode(GPIO_CE, GPIO_OUTPUT); // Chip Select
 
     // Configure the serial clock baud rate using the BR[2:0] bits
     SPI1->CR1 |= _VAL2FLD(SPI_CR1_BR, br); // Set baud rate divider

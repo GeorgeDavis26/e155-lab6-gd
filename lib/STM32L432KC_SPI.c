@@ -35,9 +35,9 @@ void initSPI(int br, int cpol, int cpha) {
 
     // AF05 for SPI alternate functions
     //PB5: MOSI
-    GPIOA->AFR[1] |= _VAL2FLD(GPIO_AFRL_AFSEL7, 5);
+    GPIOB->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL5, 5);
     //PA6: MISO
-    GPIOB->AFR[1] |= _VAL2FLD(GPIO_AFRL_AFSEL6, 5);
+    GPIOA->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL6, 5);
     //PA5: SCK
     GPIOA->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL5, 5);
 
@@ -57,7 +57,7 @@ void initSPI(int br, int cpol, int cpha) {
 
     // Configure SSM and SSI 
     // Peripheral Select (NSS - Slave Select) Pin Management
-    SPI1->CR1 &= ~SPI_CR1_SSM;
+    //SPI1->CR1 &= ~SPI_CR1_SSM;
 
     // Configure the MSTR bit 
     SPI1->CR1 |= (SPI_CR1_MSTR);
@@ -79,16 +79,13 @@ void initSPI(int br, int cpol, int cpha) {
  *    -- send: the character to send over SPI
  *    -- return: the character received over SPI */
 char spiSendReceive(char send) {
-    digitalWrite(GPIO_CS, PIO_HIGH);
     // send: the character to send over SPI
     // wait for TX (Transmit Buffer) to be empty 
-    while((SPI1->SR & SPI_SR_TXE) != 1);
-    // TODO: Write to DR??
+    while(!(SPI1->SR & SPI_SR_TXE)); 
     *(volatile char *) &SPI1->DR = send;
     // wait for RX (Recieve Buffer) to be empty 
-    while((SPI1->SR & SPI_SR_RXNE) != 1);
+    while(!(SPI1->SR & SPI_SR_RXNE));
     // return: the character received over SPI
 //    char recieve = (volatile char) SPI1->DR;
     return SPI1->DR;
-    digitalWrite(GPIO_CS, PIO_LOW);
 }

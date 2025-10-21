@@ -20,7 +20,6 @@
 // global variable int res (user defined) and temp
 
 void configDS(int res){
-    digitalWrite(GPIO_CS, PIO_LOW);
     // set bit resolution
     spiSendReceive(CONFIG_WRITE); //acces config register
     if (res == 12){spiSendReceive(TWELVEBIT_RES);}

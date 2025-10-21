@@ -13,8 +13,8 @@
 #define LED_PIN PB3 // LED pin for blinking on Port B pin 3
 #define BUFF_LEN 32
 
-#define GPIO_COPI PA12 //6 MOSI (RX)
-#define GPIO_CIPO PA11 //5 MISO (TX)
+#define GPIO_COPI PB5 //6 MOSI (RX)
+#define GPIO_CIPO PA5 //5 MISO (TX)
 #define GPIO_SCK PA5  //4 SCK
 #define GPIO_CS PA7   //3 CS
 

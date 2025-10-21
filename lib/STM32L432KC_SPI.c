@@ -55,13 +55,6 @@ void initSPI(int br, int cpol, int cpha) {
     // Configure the LSBFIRST bit to define the frame format
     SPI1->CR1 &= ~SPI_CR1_LSBFIRST;
 
-    // Select simplex or half-duplex mode by configuring RXONLY or BIDIMODE and BIDIOE 
-    // By default set to full-duplex, no action required
-
-    // Configure SSM and SSI 
-    // Peripheral Select (NSS - Slave Select) Pin Management
-    SPI1->CR1 &= ~SPI_CR1_SSM;
-
     // Configure the MSTR bit 
     SPI1->CR1 |= (SPI_CR1_MSTR);
 

@@ -77,7 +77,7 @@ int main(void) {
  *          1: data changed on leading edge of clk and captured on next edge)
  * Refer to the datasheet for more low-level details. */ 
 
-  initSPI(8, 1, 0);
+  initSPI(7, 0, 0);
   configDS(res);
 
   while(1) {

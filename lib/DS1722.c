@@ -21,27 +21,45 @@
 
 void configDS(int res){
     // set bit resolution
+    digitalWrite(GPIO_CS, PIO_HIGH);
     spiSendReceive(CONFIG_WRITE); //acces config register
+    
     if (res == 12){spiSendReceive(TWELVEBIT_RES);}
     else if (res == 11){spiSendReceive(ELEVENBIT_RES);}
     else if (res == 10){spiSendReceive(TENBIT_RES);}
     else if (res == 9){spiSendReceive(NINEBIT_RES);}
     else {spiSendReceive(EIGHTBIT_RES);} // default to 8-bit res
+    digitalWrite(GPIO_CS, PIO_LOW);
 };
 
-int readTemp(int res){
-    int temp = 0;
+float readTemp(int res){
+    float temp = 0;
+
+    digitalWrite(GPIO_CS, PIO_HIGH);
     spiSendReceive(LSB_READ); 
-    int16_t MSb = spiSendReceive(DUMMY); 
+    int LSb = spiSendReceive(CONFIG_READ);
+    digitalWrite(GPIO_CS, PIO_LOW);  
+
+    digitalWrite(GPIO_CS, PIO_HIGH);
     spiSendReceive(MSB_READ); 
-    int16_t LSb = spiSendReceive(DUMMY);
-    int16_t temp_bits = MSb << 8 | LSb;
+    int MSb = spiSendReceive(CONFIG_READ);
+    digitalWrite(GPIO_CS, PIO_LOW); 
+
+    printf("MSb is: %d ", MSb);
+    printf("LSb is: %d ", LSb);
+
+    float temp_bits = MSb << 8 | LSb;
+    printf("temp_bits: %f ", temp_bits);
+    temp = temp_bits / (256);
+    printf("temp %f \n",temp);
+
     // Convert MSb and LSb to Decimal value
-    if (res == 12)      {temp = TWELVEBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));}
-    else if (res == 11) {temp = ELEVENBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));}
-    else if (res == 10) {temp = TENBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));}
-    else if (res == 9)  {temp = NINEBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));}
-    else                {temp = EIGHTBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));}
+
+    //if (res == 12)      {temp = TWELVEBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));}
+    //else if (res == 11) {temp = ELEVENBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));}
+    //else if (res == 10) {temp = TENBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));}
+    //else if (res == 9)  {temp = NINEBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));}
+    //else                {temp = EIGHTBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));}
     return temp;
 };
 

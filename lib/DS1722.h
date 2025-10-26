@@ -12,7 +12,6 @@
 
 #include "STM32L432KC_SPI.h"
 
-#define DUMMY 0x00
 
 #define LSB_READ 0x01
 #define MSB_READ 0x02
@@ -35,6 +34,6 @@
 #define EIGHTBIT_RES_SCALAR 1
 
 void configDS(int res);
-int readTemp(int res);
+float readTemp(int res);
 
 #endif

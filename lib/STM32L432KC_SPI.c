@@ -42,7 +42,9 @@ void initSPI(int br, int cpol, int cpha) {
     GPIOA->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL5, 5);
 
     // Configure the serial clock baud rate using the BR[2:0] bits
-    SPI1->CR1 |= _VAL2FLD(SPI_CR1_BR, br); // Set baud rate divider
+    SPI1->CR1 |= _VAL2FLD(SPI_CR1_BR, br);
+
+    //GPIOA->OSPEEDR |= (GPIO_OSPEEDR_OSPEED5);
 
     // Configure the CPOL and CPHA bits combination to define one of the four
     // relationships between the data transfer and the serial clock
@@ -53,6 +55,7 @@ void initSPI(int br, int cpol, int cpha) {
     SPI1->CR1 |= _VAL2FLD(SPI_CR1_CPOL, cpol);
 
     // Configure the LSBFIRST bit to define the frame format
+    // ds1772 specifies MSB first
     SPI1->CR1 &= ~SPI_CR1_LSBFIRST;
 
     // Configure SSM and SSI 
@@ -86,6 +89,6 @@ char spiSendReceive(char send) {
     // wait for RX (Recieve Buffer) to be empty 
     while(!(SPI1->SR & SPI_SR_RXNE));
     // return: the character received over SPI
-//    char recieve = (volatile char) SPI1->DR;
-    return SPI1->DR;
+    char recieve = (volatile char) SPI1->DR;
+    return recieve;
 }

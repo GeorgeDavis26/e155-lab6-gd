@@ -1,8 +1,12 @@
 /*
-File: Lab_6_JHB.c
-Author: Josh Brake
-Email: jbrake@hmc.edu
-Date: 9/14/19
+File: main.c
+Author: George Davis
+Email: gdavis@hmc.edi
+Date: 10/27/25
+
+This file holds the main function for the Lab 6 IOT temperature sensor function.
+It holds HTML and C code to interface with the temperate sensor through SPI and the ESP
+wifi module with UART.
 */
 
 

@@ -2,7 +2,7 @@
 // George Davis
 // gdavis@hmc.edu
 // 10/22/25
-// TODO: <SHORT DESCRIPTION OF WHAT THIS FILE DOES>
+// Header file for the DS1772.c driver with macros to avoid magic numbers
 
 #ifndef DS1722_H
 #define DS1722_H
@@ -26,6 +26,10 @@
 #define EIGHTBIT_RES 0b11100000
 
 #define TEMPBIT_WIDTH 16
+#define TEMP_SB_WIDTH 8
+
+#define TWOS_COMP_CONVERT 256
+#define TEMP_SCALAR 256
 
 #define TWELVEBIT_RES_SCALAR 0.0625
 #define ELEVENBIT_RES_SCALAR 0.125
@@ -35,5 +39,6 @@
 
 void configDS(int res);
 float readTemp(int res);
+int   twosComp(int MSb_in);
 
 #endif

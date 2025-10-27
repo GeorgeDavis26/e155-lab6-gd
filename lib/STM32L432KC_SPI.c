@@ -82,13 +82,9 @@ void initSPI(int br, int cpol, int cpha) {
  *    -- send: the character to send over SPI
  *    -- return: the character received over SPI */
 char spiSendReceive(char send) {
-    // send: the character to send over SPI
-    // wait for TX (Transmit Buffer) to be empty 
-    while(!(SPI1->SR & SPI_SR_TXE)); 
-    *(volatile char *) &SPI1->DR = send;
-    // wait for RX (Recieve Buffer) to be empty 
-    while(!(SPI1->SR & SPI_SR_RXNE));
-    // return: the character received over SPI
-    char recieve = (volatile char) SPI1->DR;
-    return recieve;
+    while(!(SPI1->SR & SPI_SR_TXE)); // Wait until the transmit buffer is empty
+    *(volatile char *) (&SPI1->DR) = send; // Transmit the character over SPI
+    while(!(SPI1->SR & SPI_SR_RXNE)); // Wait until data has been received
+    char rec = (volatile char) SPI1->DR;
+    return rec; // Return received character
 }

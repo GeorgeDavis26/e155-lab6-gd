@@ -77,111 +77,111 @@ void updateRESStatus(char request[])
 // Solution Functions
 /////////////////////////////////////////////////////////////////
 
- int main(void) {
-   configureFlash();
-   configureClock();
+ //int main(void) {
+ // configureFlash();
+ // configureClock();
 
-   gpioEnable(GPIO_PORT_A);
-   gpioEnable(GPIO_PORT_B);
-   gpioEnable(GPIO_PORT_C);
+ // gpioEnable(GPIO_PORT_A);
+ // gpioEnable(GPIO_PORT_B);
+ // gpioEnable(GPIO_PORT_C);
 
-   pinMode(PB3, GPIO_OUTPUT);
+ // pinMode(PB3, GPIO_OUTPUT);
   
-   RCC->APB2ENR |= (RCC_APB2ENR_TIM15EN);
-   //initTIM(TIM15);
-   initSPI(7, 0, 1);
-   configDS(res_status);
+ // RCC->APB2ENR |= (RCC_APB2ENR_TIM15EN);
+ // //initTIM(TIM15);
+ // initSPI(7, 0, 1);
+ // configDS(res_status);
  
-   while(1){
-     //for(int i=0; i<8; i++){
-       configDS(res_status);
-       float temp_C = readTemp(res_status);
-       printf("Resolution: %d ", res_status);
-       printf("Temp: %f \n", temp_C);
-       //delay_millis(TIM15, 500);
-     //}
-   }
- }
+ // while(1){
+ //   //for(int i=0; i<8; i++){
+ //     configDS(res_status);
+ //     float temp_C = readTemp(res_status);
+ //     printf("Resolution: %d ", res_status);
+ //     printf("Temp: %f \n", temp_C);
+ //     //delay_millis(TIM15, 1000);
+ //   //}
+ // }
+ //}
 
-//int main(void) {
-// configureFlash();
-// configureClock();
+int main(void) {
+configureFlash();
+configureClock();
 
-// gpioEnable(GPIO_PORT_A);
-// gpioEnable(GPIO_PORT_B);
-// gpioEnable(GPIO_PORT_C);
+gpioEnable(GPIO_PORT_A);
+gpioEnable(GPIO_PORT_B);
+gpioEnable(GPIO_PORT_C);
 
-// pinMode(PB3, GPIO_OUTPUT);
+pinMode(PB3, GPIO_OUTPUT);
   
-// RCC->APB2ENR |= (RCC_APB2ENR_TIM15EN);
-// initTIM(TIM15);
+RCC->APB2ENR |= (RCC_APB2ENR_TIM15EN);
+initTIM(TIM15);
   
-// USART_TypeDef * USART = initUSART(USART1_ID, 125000);
+USART_TypeDef * USART = initUSART(USART1_ID, 125000);
 
 
-///* Enables the SPI peripheral and intializes its clock speed (baud rate), polarity, and phase.
-//*    -- br: (0b000 - 0b111). The SPI clk will be the master clock / 2^(BR+1).
-//*    -- cpol: clock polarity (0: inactive state is logical 0, 1: inactive state is logical 1).
-//*    -- cpha: clock phase (0: data captured on leading edge of clk and changed on next edge, 
-//*          1: data changed on leading edge of clk and captured on next edge)
-//* Refer to the datasheet for more low-level details. */ 
+/* Enables the SPI peripheral and intializes its clock speed (baud rate), polarity, and phase.
+*    -- br: (0b000 - 0b111). The SPI clk will be the master clock / 2^(BR+1).
+*    -- cpol: clock polarity (0: inactive state is logical 0, 1: inactive state is logical 1).
+*    -- cpha: clock phase (0: data captured on leading edge of clk and changed on next edge, 
+*          1: data changed on leading edge of clk and captured on next edge)
+* Refer to the datasheet for more low-level details. */ 
 
-// initSPI(7, 0, 1);
+initSPI(7, 0, 1);
 
-// configDS(res_status);
+configDS(res_status);
 
-// while(1) {
-//   /* Wait for ESP8266 to send a request.
-//   Requests take the form of '/REQ:<tag>\n', with TAG begin <= 10 characters.
-//   Therefore the request[] array must be able to contain 18 characters.
-//   */
+while(1) {
+  /* Wait for ESP8266 to send a request.
+  Requests take the form of '/REQ:<tag>\n', with TAG begin <= 10 characters.
+  Therefore the request[] array must be able to contain 18 characters.
+  */
 
-//   // Receive web request from the ESP
-//   char request[BUFF_LEN] = "                  "; // initialize to known value
-//   int charIndex = 0;
+  // Receive web request from the ESP
+  char request[BUFF_LEN] = "                  "; // initialize to known value
+  int charIndex = 0;
   
-//   // Keep going until you get end of line character
-//   while((inString(request, "\n")) == -1) {
-//     // Wait for a complete request to be transmitted before processing
-//     while(!(USART->ISR & USART_ISR_RXNE));
-//     request[charIndex++] = readChar(USART);
-//   }
+  // Keep going until you get end of line character
+  while((inString(request, "\n")) == -1) {
+    // Wait for a complete request to be transmitted before processing
+    while(!(USART->ISR & USART_ISR_RXNE));
+    request[charIndex++] = readChar(USART);
+  }
 
-//   // TODO: Add SPI code here for reading temperature
-//   updateRESStatus(request);
-//   configDS(res_status);
-//   printf("resolution is %d ",res_status);
-//   float temp_C = readTemp(res_status);
+  // TODO: Add SPI code here for reading temperature
+  updateRESStatus(request);
+  configDS(res_status);
+  printf("resolution is %d ",res_status);
+  float temp_C = readTemp(res_status);
 
-//   // Update string with current LED state and Resolution
-//   int led_status = updateLEDStatus(request);
+  // Update string with current LED state and Resolution
+  int led_status = updateLEDStatus(request);
 
-//   char ledStatusStr[20];
-//   if (led_status == 1)
-//     sprintf(ledStatusStr,"LED is on!");
-//   else if (led_status == 0)
-//     sprintf(ledStatusStr,"LED is off!");
+  char ledStatusStr[20];
+  if (led_status == 1)
+    sprintf(ledStatusStr,"LED is on!");
+  else if (led_status == 0)
+    sprintf(ledStatusStr,"LED is off!");
   
-//   char tempStatusStr[20];
-//   sprintf(tempStatusStr,"%f \xB0""C", temp_C);
+  char tempStatusStr[20];
+  sprintf(tempStatusStr,"%.4f \xB0""C", temp_C);
 
-//   // finally, transmit the webpage over UART
-//   sendString(USART, webpageStart); // webpage header code
-//   sendString(USART, ledStr); // button for controlling LED
-//   sendString(USART, resStr); // buttons for controlling temp bit resolution
+  // finally, transmit the webpage over UART
+  sendString(USART, webpageStart); // webpage header code
+  sendString(USART, ledStr); // button for controlling LED
+  sendString(USART, resStr); // buttons for controlling temp bit resolution
 
-//   sendString(USART, "<h2>LED Status</h2>");
-//   sendString(USART, "<p>");
-//   sendString(USART, ledStatusStr);
-//   sendString(USART, "</p>");
+  sendString(USART, "<h2>LED Status</h2>");
+  sendString(USART, "<p>");
+  sendString(USART, ledStatusStr);
+  sendString(USART, "</p>");
 
-//   sendString(USART, "<h2>Temperature Reading</h2>");
-//   sendString(USART, "<p>");
-//   sendString(USART, tempStatusStr);
-//   sendString(USART, "</p>");
+  sendString(USART, "<h2>Temperature Reading</h2>");
+  sendString(USART, "<p>");
+  sendString(USART, tempStatusStr);
+  sendString(USART, "</p>");
 
   
-//   sendString(USART, webpageEnd);
-// }
-//}
+  sendString(USART, webpageEnd);
+}
+}
 

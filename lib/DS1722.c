@@ -32,34 +32,41 @@ void configDS(int res){
     digitalWrite(GPIO_CS, PIO_LOW);
 };
 
+char twosComp(int MSb_in){
+    char MSb_out = 0;
+    if (MSb_in & (1 << 7)){MSb_out = (MSb_in - 256);}
+    else MSb_out = MSb_in;
+    return MSb_out;
+}
+
 float readTemp(int res){
-    float temp = 0;
+    float temp_C;
+    
+    digitalWrite(GPIO_CS, PIO_HIGH);
+    spiSendReceive(MSB_READ); 
+    unsigned char MSb_tc = spiSendReceive(CONFIG_READ);
+    digitalWrite(GPIO_CS, PIO_LOW); 
 
     digitalWrite(GPIO_CS, PIO_HIGH);
     spiSendReceive(LSB_READ); 
-    int LSb = spiSendReceive(CONFIG_READ);
+    unsigned char LSb = spiSendReceive(CONFIG_READ);
     digitalWrite(GPIO_CS, PIO_LOW);  
 
-    digitalWrite(GPIO_CS, PIO_HIGH);
-    spiSendReceive(MSB_READ); 
-    int MSb = spiSendReceive(CONFIG_READ);
-    digitalWrite(GPIO_CS, PIO_LOW); 
+    printf("MSb is: %d ", MSb_tc);
+    printf("LSb is: %d", LSb);
 
-    printf("MSb is: %d ", MSb);
-    printf("LSb is: %d ", LSb);
-
+    char MSb = twosComp(MSb_tc);
     float temp_bits = MSb << 8 | LSb;
-    printf("temp_bits: %f ", temp_bits);
-    temp = temp_bits / (256);
-    printf("temp %f \n",temp);
+    temp_C = temp_bits  / (256);
+    //printf("temp_bits: %f ", temp_bits);
+    //printf("temp %f \n",temp_C);
 
     // Convert MSb and LSb to Decimal value
-
     //if (res == 12)      {temp = TWELVEBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));}
     //else if (res == 11) {temp = ELEVENBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));}
     //else if (res == 10) {temp = TENBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));}
     //else if (res == 9)  {temp = NINEBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));}
     //else                {temp = EIGHTBIT_RES_SCALAR * (temp_bits >> (TEMPBIT_WIDTH-res));}
-    return temp;
+    return temp_C;
 };
 
